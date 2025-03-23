@@ -1,31 +1,61 @@
-version: '3.8'
-
 services:
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j-db
+    environment:
+      - NEO4J_AUTH=neo4j/password
+    ports:
+      - "7687:7687"
+      - "7474:7474"
+    volumes:
+      - neo4j_data:/data
+
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: knowledge_graph
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   backend:
-    build: ./backend
+    build: ../backend
+    container_name: knowledge-graph-backend
+    environment:
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=password
+      - POSTGRES_URI=postgresql://postgres:password@postgres:5432/knowledge_graph
     ports:
       - "8000:8000"
-    env_file:
-      - ./backend/.env
     depends_on:
-      - database
+      - neo4j
+      - postgres
 
   frontend:
-    build: ./frontend
+    build: ../frontend
+    container_name: knowledge-graph-frontend
     ports:
       - "3000:3000"
     depends_on:
       - backend
 
-  database:
-    image: neo4j:latest
-    ports:
-      - "7474:7474"
-      - "7687:7687"
+  data-service:
+    build: ../data-service
+    container_name: knowledge-graph-data-service
     environment:
-      - NEO4J_AUTH=neo4j/password
+      - NEO4J_URI=bolt://neo4j:7687
+      - POSTGRES_URI=postgresql://postgres:password@postgres:5432/knowledge_graph
+    depends_on:
+      - neo4j
+      - postgres
     volumes:
-      - neo4j_data:/data
+      - ../data:/app/data
 
 volumes:
   neo4j_data:
+  postgres_data:
