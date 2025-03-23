@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Dukkha",
+    "category": "Philosophy",
+    "description": "The truth of suffering in Buddhism.",
+    "translations": {
+      "en": "Suffering",
+      "my": "ဒုက္ခ",
+      "pli": "Dukkha"
+    }
+  },
+  {
+    "name": "Anatta",
+    "category": "Philosophy",
+    "description": "The doctrine of non-self.",
+    "translations": {
+      "en": "Non-self",
+      "my": "အနတ္တ",
+      "pli": "Anatta"
+    }
+  }
+]

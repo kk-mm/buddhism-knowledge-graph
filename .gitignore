@@ -1,0 +1,11 @@
+# Ignore environment files
+.env
+*.pyc
+__pycache__/
+
+# Ignore dependency directories
+venv/
+node_modules/
+
+# Ignore database files
+neo4j_data/
